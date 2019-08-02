@@ -1,4 +1,10 @@
-## simple function to run DESeq2 given a countdata and input for coldata objects
+#for pieces of code
+## for notes
+### titles
+
+### simple function to run DESeq2 given a countdata and input for coldata objects
+
+library(DESeq2)
 
 run.deseq.genes <- function(countdata = countdata, stage, type){
   coldata <- data.frame(stage = stage, condition = type)
