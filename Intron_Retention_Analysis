@@ -1,0 +1,83 @@
+library(dplyr)
+library(purrr)
+
+path.to.file <- '../Intron_Retention/Result_Tables/'
+files <- list.files()
+
+load.IR.table <- function(x){
+  out <- read.csv(paste0(path.to.file, x), sep = '\t', header = T)
+  names <- x
+  out$sample <- names
+  out
+}
+
+IR.tables <- lapply(files, load.IR.table)
+## filter out low coverage, extracting ENSEMBL IDs and sum all values with the same identifier
+subset.by.coverage <- function(x){
+  out <- x #subset(x, x$Warnings == '-') ## if filter out low coverage is necessary only
+  ## extract string between slashes
+  out$ENSEMBL <- strsplit(as.character(out$Name), "/", TRUE) %>% map(`[`(2)) %>% unlist()
+  # merge rows with same identifier and sum them
+  out <- tapply(out$IRratio, out$ENSEMBL, sum)
+  out <- data.frame(out)
+  out <- data.frame(IRratio = out$out, ENSEMBL = rownames(out), row.names = NULL)
+  return(out)
+}
+IR.tables.sub <- lapply(IR.tables, subset.by.coverage)
+
+## split list in single data frames
+for (i in seq(IR.tables.sub))
+  assign(paste0("IR.table", i), IR.tables.sub[[i]])
+
+## merges replicates
+test.function <- function(table1, table2){
+  frame <- rbind(table1,table2)
+  frame <- tapply(frame$IRratio, frame$ENSEMBL, mean)
+  frame <- data.frame(frame)
+  return(frame)
+}
+PGC_256 <- test.function(IR.table1, IR.table2)
+Soma_256 <- test.function(IR.table5, IR.table6)
+PGC_High <- test.function(IR.table3, IR.table4)
+Soma_High <- test.function(IR.table7, IR.table8)
+
+boxplot(IR.table5$IRratio, IR.table6$IRratio, IR.table7$IRratio, IR.table8$IRratio)
+## check
+IR.table1[grep('ENSDARG00000000018', IR.table1$ENSEMBL),]
+IR.table1[grep('ENSDARG00000000018', IR.table1$ENSEMBL),]
+
+## subset by early genes
+path.to.early.genes <- "../New Analysis MBT/"
+filter.early.genes <- function(x){
+  early.pgc <- read.csv(paste0(path.to.early.genes,"UpregInPGCOnlyAtHigh.txt"), sep = '\t')
+  early.pgc.names <- merge(x, early.pgc, by = 0)
+  #table <- subset(x, x[early.pgc.names,]
+  #table <- na.omit(table)
+  return(early.pgc.names)
+}
+merged.PGC.256 <- filter.early.genes(PGC_256)
+merged.PGC.High <- filter.early.genes(PGC_High)
+merged.Soma.256 <- filter.early.genes(Soma_256)
+merged.Soma.High <- filter.early.genes(Soma_High)
+
+
+## random sample and permutation
+permute.early.genes <- function(x, iter = 10000, size = 152){
+  distr <- integer(iter)
+  for(i in 1:iter) {
+    distr[i] <- mean(x[sample(1:nrow(x), size=size, replace=F),])
+  }
+  #table <- subset(x, x[early.pgc.names,]
+  #table <- na.omit(table)
+  return(distr)
+}
+random.PGC.256 <- permute.early.genes(PGC_256)
+random.PGC.High <- permute.early.genes(PGC_High)
+random.Soma.256 <- permute.early.genes(Soma_256)
+random.Soma.High <- permute.early.genes(Soma_High)
+
+
+# how many out of iter have lower score than observed -> empirical P
+p_Emp <- length(which(distr > mean(merged.PGC.High$frame))) / iter
+
+return(p_emp)
