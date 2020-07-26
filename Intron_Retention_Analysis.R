@@ -36,15 +36,7 @@ test.function <- function(table1, table2){
   frame <- data.frame(frame)
   return(frame)
 }
-PGC_256 <- test.function(IR.table1, IR.table2)
-Soma_256 <- test.function(IR.table5, IR.table6)
-PGC_High <- test.function(IR.table3, IR.table4)
-Soma_High <- test.function(IR.table7, IR.table8)
 
-boxplot(IR.table5$IRratio, IR.table6$IRratio, IR.table7$IRratio, IR.table8$IRratio)
-## check
-IR.table1[grep('ENSDARG00000000018', IR.table1$ENSEMBL),]
-IR.table1[grep('ENSDARG00000000018', IR.table1$ENSEMBL),]
 
 ## subset by early genes
 path.to.early.genes <- "../New Analysis MBT/"
@@ -55,10 +47,7 @@ filter.early.genes <- function(x){
   #table <- na.omit(table)
   return(early.pgc.names)
 }
-merged.PGC.256 <- filter.early.genes(PGC_256)
-merged.PGC.High <- filter.early.genes(PGC_High)
-merged.Soma.256 <- filter.early.genes(Soma_256)
-merged.Soma.High <- filter.early.genes(Soma_High)
+
 
 
 ## random sample and permutation
@@ -71,10 +60,7 @@ permute.early.genes <- function(x, iter = 10000, size = 152){
   #table <- na.omit(table)
   return(distr)
 }
-random.PGC.256 <- permute.early.genes(PGC_256)
-random.PGC.High <- permute.early.genes(PGC_High)
-random.Soma.256 <- permute.early.genes(Soma_256)
-random.Soma.High <- permute.early.genes(Soma_High)
+
 
 
 # how many out of iter have lower score than observed -> empirical P
