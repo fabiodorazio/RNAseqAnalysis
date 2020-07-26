@@ -4,16 +4,9 @@
 
 ### simple function to plot custom pca plot
 
-library(DESeq2)
-library(ggplot2)
-library(RColorBrewer)
-
-stage <- rep(c('s256', 'high', 'dome', 'somites10', 'prim5', 'prim5', 'prim5'), each = 4)
-type <- rep(c('PGC', 'Soma'), times = 14)
-treatment <- c(rep('wt', times = 20), rep('MO', times = 4), rep('5mm', times = 4))
 
 ## pca plot
-plot.pca.atac <- function(x){
+.plot.pca <- function(x){
   coldata <- data.frame(stage = stage, condition = type, treatment = treatment)
   row.names(coldata) <- colnames(x)
   
@@ -22,18 +15,14 @@ plot.pca.atac <- function(x){
                                 design= ~ stage + condition)
   dds <- DESeq(dds)
   vsd <- vst(dds, blind=TRUE)
-  #plotPCA(vsd, intgroup=c("condition", "stages"))
   
   pcaData <- plotPCA(vsd, intgroup=c("condition", "stage", "treatment"), returnData=TRUE)
   percentVar <- round(100 * attr(pcaData, "percentVar"))
   ggplot(pcaData, aes(PC1, PC2, color=group, shape=treatment)) +
     geom_point(size=3) + 
-    scale_color_manual(values = c("pale green3", "lightgreen", "deepskyblue4", "dark green", "dark cyan", "palegreen1", "mediumseagreen",
-                                  "plum", "pink1", "mediumpurple3", "mediumpurple1", "purple", "mistyrose", "darkorchid1")) + 
     theme_bw() + geom_point(aes(size = 4)) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
     geom_hline(yintercept=0, linetype="longdash", colour="grey", size=0.8) +
   geom_vline(xintercept=0, linetype="longdash", colour="grey", size=0.8) +
     scale_y_reverse(position = 'top') + scale_x_reverse()
   
 }
-plot.pca.atac(enh.count.mat)
