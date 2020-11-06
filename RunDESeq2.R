@@ -14,7 +14,6 @@ run.deseq.genes <- function(countdata = countdata, stage, type){
   dds <- DESeq(dds)
   normalizedData <- counts(dds, normalized = TRUE)
   
-  res <- results(dds) 
   ## for testing logFC above or belove a threshold:
   res <- results(dds, lfcThreshold = .5, altHypothesis = 'greaterAbs')
   
