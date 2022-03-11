@@ -66,4 +66,3 @@ permute.early.genes <- function(x, iter = 10000, size = 152){
 # how many out of iter have lower score than observed -> empirical P
 p_Emp <- length(which(distr > mean(merged.PGC.High$frame))) / iter
 
-return(p_emp)
