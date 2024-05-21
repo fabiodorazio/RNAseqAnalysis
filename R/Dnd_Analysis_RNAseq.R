@@ -1,7 +1,14 @@
 
 library(DESeq2)
-setwd('~/Desktop/Postdoc/Data_Analysis/RNAseq/Dnd/')
+setwd('RNAseq/Dnd/')
 files_2 <- list.files(pattern = '\\.tab')
+
+outDir<- "../Dnd_Results"
+
+if(!dir.exists(file.path(outDir))){
+	dir.create(file.path(outDir))
+}
+
 ## creating a function which reads a csv file and make a matrix
 readTagsPerGene <- function(x){
   out <- read.csv(x, skip = 4, header = FALSE, sep = "\t", row.names = 1,
