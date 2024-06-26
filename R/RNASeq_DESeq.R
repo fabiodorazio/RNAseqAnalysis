@@ -7,7 +7,7 @@
 library('DESeq2')
 library('ggplot2')
 
-setwd("~/Desktop/PhD-March-2019-backup/FabioRNAseq (2)/2108/perGeneCounts_Stages/")
+setwd("../perGeneCounts_Stages/")
 files <- list.files(pattern = '\\.tab')
 
 ## creating a function which reads a csv file and make a matrix
@@ -246,9 +246,9 @@ points(normalizedData.oocyte.latePGC[unique(x$Row.names),], col = 'red', cex = 0
 
 ## zygotic vs maternal transcripts
 tpm <- read.csv('~/Desktop/PhD-March-2019-backup/FabioRNAseq (2)/2108/RNAseqtables/tpmStagesFiltered.txt', sep = '\t')
-zygotic_transcripts <- read.csv('~/Desktop/PhD-March-2019-backup/FabioRNAseq (2)/2108/RNAseqtables/ZygoticTranscripts_tpm_threshold2.txt', sep = '\t')
-up_high_dome <- read.csv('~/Desktop/PhD-March-2019-backup/FabioRNAseq (2)/2108/RNAseqtables/Diff_Expressed_Genes/UPREGinPGCfromHighToDome.txt', sep = '\t')
-up_256_high <- read.csv('~/Desktop/PhD-March-2019-backup/FabioRNAseq (2)/2108/RNAseqtables/MBT/UpregGenesInPGConly256toHighpadj01.txt', sep = '\t')
+zygotic_transcripts <- read.csv('../2108/RNAseqtables/ZygoticTranscripts_tpm_threshold2.txt', sep = '\t')
+up_high_dome <- read.csv('../RNAseqtables/Diff_Expressed_Genes/UPREGinPGCfromHighToDome.txt', sep = '\t')
+up_256_high <- read.csv('../RNAseqtables/MBT/UpregGenesInPGConly256toHighpadj01.txt', sep = '\t')
 # make a list and subset the genes 
 # arrange genes based on zygotic or maternal
 my_transcript_list <- list(up_256_high, up_high_dome)
@@ -262,5 +262,5 @@ subset_transcripts <- function(x){
 
 my_transcript_list <- lapply(my_transcript_list, subset_transcripts)
 # save
-write.table(my_transcript_list[[1]], '~/Desktop/PhD-March-2019-backup/FabioRNAseq (2)/2108/RNAseqtables/Upregulated_Transcript_List_256_high_PGConly_Maternal_vs_zygotic. txt', sep = '\t')
-write.table(my_transcript_list[[2]], '~/Desktop/PhD-March-2019-backup/FabioRNAseq (2)/2108/RNAseqtables/Upregulated_Transcript_List_high_dome_PGConly_Maternal_vs_zygotic. txt', sep = '\t')
+write.table(my_transcript_list[[1]], '../RNAseqtables/Upregulated_Transcript_List_256_high_PGConly_Maternal_vs_zygotic. txt', sep = '\t')
+write.table(my_transcript_list[[2]], '../RNAseqtables/Upregulated_Transcript_List_high_dome_PGConly_Maternal_vs_zygotic. txt', sep = '\t')
