@@ -3,7 +3,7 @@
 
 ## import count files
 library(DESeq2)
-setwd('~/Desktop/Postdoc/Data_Analysis/RNAseq/Tdrd7_MO/')
+setwd('../data/Tdrd7_MO/')
 files_2 <- list.files(pattern = '\\.tab')
 ## creating a function which reads a csv file and make a matrix
 readTagsPerGene <- function(x){
@@ -114,7 +114,7 @@ setwd('~/Desktop/PhD-March-2019-backup/FabioRNAseq (2)/')
 germ_cell_go <- read.csv('GermcellDevGO.txt', sep = '\t')
 germ_cell_go <- as.character(unique(germ_cell_go[,1]))
 ## import tpm matrix
-tpm <- read.csv('~/Desktop/PhD-March-2019-backup/FabioRNAseq (2)/2108/RNAseqtables/tpmStagesFiltered.txt', sep = '\t')
+tpm <- read.csv('../tpmStagesFiltered.txt', sep = '\t')
 tpm_germ <- tpm[germ_cell_go,]
 tpm_germ_sub <- subset(tpm_germ, tpm_germ$s256PGC1 < 1)
 ## add column to logfold corr
@@ -170,7 +170,7 @@ GermDevGenes$external_gene_name <- NULL
 GermDevGenesOrder <- GermDevGenes[order(GermDevGenes$Tdrd7_5mm_PGC_rep1_2018),]
 pheatmap(GermDevGenesOrder, cluster_rows = FALSE, cluster_cols = FALSE)
 ## get genes upregulated by MO
-setwd('~/Desktop/PhD-March-2019-backup/FabioRNAseq (2)/2108/perGeneCounts_Tdrd7/')
+setwd('../data/')
 up_MO <- read.csv('UpregulatedByTdrd7MOinPGCs.txt', sep = '\t', row.names = 1)
 down_MO <- read.csv('DownregulatedByTdrd7MOinPGCs.txt', sep = '\t', row.names = 1)
 
@@ -282,7 +282,7 @@ ggplot(df.gg, aes(x=Index, y=Tn5CutSites, Group=factor(Expression))) +
 ## enhancers
 ##requires: resMOsub, pgc_tag_cluster
 library(rtracklayer)
-setwd('~/Desktop/Postdoc/Data_Analysis/ATACseq/')
+setwd('../Data_Analysis/ATACseq/')
 
 atac.fold.change.pgc <- readRDS('ATAC_FoldChange_Coverage120ATAC.PGC_24hpf_Tdrd7_MO5mismatch.rep2.rds')
 #readRDS('ATAC_FoldChange_PGC_5mm_rep2_resize20.rds')
@@ -301,7 +301,7 @@ file_summit <- list.files()[grep('summit', list.files())]
 pgc.summit <- .import.summit(file_summit[1])
 soma.summit <- .import.summit (file_summit[2])
 #import k27ac data
-k27ac <- read.csv('~/Desktop/PhD-March-2019-backup/ATAC analysis/enhancers/ChIP-seq_Skarmeta_Lab_H3K27ac_0002AS.DCD000652SQ.USERpanosfirbas.R1.filt.deduplicated.nodup_pooled.naive_overlap.narrowPeak.gz', sep = '\t', header = F)
+k27ac <- read.csv('../ATAC analysis/enhancers/ChIP-seq_Skarmeta_Lab_H3K27ac_0002AS.DCD000652SQ.USERpanosfirbas.R1.filt.deduplicated.nodup_pooled.naive_overlap.narrowPeak.gz', sep = '\t', header = F)
 colnames(k27ac) <- c('chromosome', 'start', 'end', 'name', 'V5', 'strand', 'fold', 'pvalue', 'qvalue', 'V10')
 k27ac <- toGRanges(k27ac)
 
@@ -394,8 +394,8 @@ ggplot(df.gg, aes(x=Index, y=Tn5CutSites, Group=factor(Expression))) +
   theme_classic() + theme(legend.position='bottom')
 
 ### differential openess 
-atacUp <- read.csv('~/Desktop/PhD-March-2019-backup/ATAC analysis/TablesATAC/All_ATAC_Upreg_PGC_Prim5.txt', sep = '\t')
-atacDown <- read.csv('~/Desktop/PhD-March-2019-backup/ATAC analysis/TablesATAC/All_ATAC_Upreg_Soma_Prim5.txt', sep = '\t')
+atacUp <- read.csv('../ATAC analysis/TablesATAC/All_ATAC_Upreg_PGC_Prim5.txt', sep = '\t')
+atacDown <- read.csv('../ATAC analysis/TablesATAC/All_ATAC_Upreg_Soma_Prim5.txt', sep = '\t')
 
 convert.to.grange <- function(x){
   x$chr <- as.character(lapply(strsplit(rownames(x), "\\:"), function(u) u[[1]][1]))
@@ -409,7 +409,7 @@ atacUpRange <- convert.to.grange(atacUp)
 atacDownRange <- convert.to.grange(atacDown)
 
 library(AnnotationDbi)
-txdb <- loadDb('~/Desktop/Postdoc/Data_Analysis/annotation/txdb_DanRer7.sqlite')
+txdb <- loadDb('../annotation/txdb_DanRer7.sqlite')
 ensembl.ids.atac <- function(x){
   grange.obj <- toGRanges(x)
   anno.ensembl.id <- annotatePeakInBatch(grange.obj, AnnotationData=toGRanges(txdb), 
