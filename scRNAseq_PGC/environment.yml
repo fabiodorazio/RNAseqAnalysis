@@ -1,0 +1,15 @@
+name: scRNAseq_PGC
+channels:
+  - bioconda
+  - r
+  - defaults
+dependencies:
+  - pip=23.3.1=py311h06a4308_0
+  - pip:
+      - numpy==1.26.3
+      - pandas==1.5.3
+      - seaborn==0.13.2
+      - scanpy==1.10.2
+      - scvi==0.6.8
+      - scipy==1.14.0
+prefix: /home/fdorazio/apps/conda/envs/neo_aligner_1.0
